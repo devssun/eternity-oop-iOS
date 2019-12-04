@@ -33,23 +33,37 @@ class Bag {
         self.amount = amount
     }
     
-    func hasInvitation() -> Bool {
+    // Bag을 자율적인 존재로 바꿔보자
+    // Bag의 내부 상태에 접근하는 모든 로직을 Bag 안으로 캡슐화해서 결합도를 낮추면 된다
+    func hold(ticket: Ticket) -> Float {
+        if hasInvitation() {
+            setTicket(ticket: ticket)
+            return 0.0
+        }else {
+            minusAmount(amount: ticket.fee)
+            setTicket(ticket: ticket)
+            return ticket.fee
+        }
+    }
+    
+    // 아래 메소드들의 접근지정자를 private로 변경한다
+    private func hasInvitation() -> Bool {
         return invitation != nil
     }
     
-    func hasTicket() -> Bool {
+    private func hasTicket() -> Bool {
         return ticket != nil
     }
     
-    func setTicket(ticket: Ticket) {
+    private func setTicket(ticket: Ticket) {
         self.ticket = ticket
     }
     
-    func minusAmount(amount: Float) {
+    private func minusAmount(amount: Float) {
         self.amount -= amount
     }
     
-    func plusAmount(amount: Float) {
+    private func plusAmount(amount: Float) {
         self.amount += amount
     }
 }
@@ -66,14 +80,7 @@ class Audience {
     // Audience의 캡슐화 개선하기
     // 변경된 코드에서 Audience는 자신의 가방 안에 초대장이 들어있는지를 스스로 확인한다 (이전에는 제 3자가 확인)
     func buy(ticket: Ticket) -> Float {
-        if (bag?.hasInvitation())! {
-            bag?.setTicket(ticket: ticket)
-            return 0.0
-        }else {
-            bag?.minusAmount(amount: ticket.fee)
-            bag?.setTicket(ticket: ticket)
-            return ticket.fee
-        }
+        return (bag?.hold(ticket: ticket))!
     }
 }
 
