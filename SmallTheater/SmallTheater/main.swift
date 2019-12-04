@@ -94,7 +94,12 @@ class TicketOffice {
         self.tickets = tickets
     }
     
-    func getTicket() -> Ticket {
+    // TicketOffice의 자율권을 찾아주자
+    func sellTicketTo(audience: Audience) {
+        plusAmount(amount: audience.buy(ticket: getTicket()))
+    }
+    
+    private func getTicket() -> Ticket {
         return (tickets?.remove(at: 0))!
     }
     
@@ -102,7 +107,7 @@ class TicketOffice {
         self.amount -= amount
     }
     
-    func plusAmount(amount: Float) {
+    private func plusAmount(amount: Float) {
         self.amount += amount
     }
 }
@@ -115,7 +120,8 @@ class TicketSeller {
     // TicketSeller가 직접 Bag과 TicketOffice를 처리하는 자율적인 존재가 되도록 설계를 변경한다
     // Audience가 Bag을 직접 처리하도록 변경하기 때문에 외부에서는 Audience가 Bag을 소유하고 있다는 사실을 알 필요가 없다
     func sellTo(audience: Audience) {
-        ticketOffice?.plusAmount(amount: audience.buy(ticket: (ticketOffice?.getTicket())!))
+        // 변경 후에는 TicketOffice가 Audience에게 직접 티켓을 판매하기 때문에 Audience에 대해 알고 있어야한다 (새로운 의존성 추가)
+        ticketOffice?.sellTicketTo(audience: audience)
     }
 }
 
