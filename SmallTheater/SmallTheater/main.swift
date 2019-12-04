@@ -57,10 +57,23 @@ class Bag {
 // 관람객
 // 관람객은 소지품을 보관하기 위해 가방을 소지할 수 있다
 class Audience {
-    var bag: Bag?
+    private var bag: Bag?
     
     init(bag: Bag) {
         self.bag = bag
+    }
+    
+    // Audience의 캡슐화 개선하기
+    // 변경된 코드에서 Audience는 자신의 가방 안에 초대장이 들어있는지를 스스로 확인한다 (이전에는 제 3자가 확인)
+    func buy(ticket: Ticket) -> Float {
+        if (bag?.hasInvitation())! {
+            bag?.setTicket(ticket: ticket)
+            return 0.0
+        }else {
+            bag?.minusAmount(amount: ticket.fee)
+            bag?.setTicket(ticket: ticket)
+            return ticket.fee
+        }
     }
 }
 
@@ -93,16 +106,9 @@ class TicketSeller {
     private var ticketOffice: TicketOffice?
     
     // TicketSeller가 직접 Bag과 TicketOffice를 처리하는 자율적인 존재가 되도록 설계를 변경한다
+    // Audience가 Bag을 직접 처리하도록 변경하기 때문에 외부에서는 Audience가 Bag을 소유하고 있다는 사실을 알 필요가 없다
     func sellTo(audience: Audience) {
-        if (audience.bag?.hasInvitation())! {
-            let ticket = ticketOffice?.getTicket()
-            audience.bag?.setTicket(ticket: ticket!)
-        }else {
-            let ticket = ticketOffice?.getTicket()
-            audience.bag?.minusAmount(amount: ticket!.fee)
-            ticketOffice?.plusAmount(amount: ticket!.fee)
-            audience.bag?.setTicket(ticket: ticket!)
-        }
+        ticketOffice?.plusAmount(amount: audience.buy(ticket: (ticketOffice?.getTicket())!))
     }
 }
 
