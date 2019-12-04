@@ -89,22 +89,31 @@ class TicketOffice {
 
 // 판매원
 class TicketSeller {
-    var ticketOffice: TicketOffice?
+    // 외부에서 ticketOffice에 접근할 수 없도록 private 접근지정자를 부여한다
+    private var ticketOffice: TicketOffice?
+    
+    // TicketSeller가 직접 Bag과 TicketOffice를 처리하는 자율적인 존재가 되도록 설계를 변경한다
+    func sellTo(audience: Audience) {
+        if (audience.bag?.hasInvitation())! {
+            let ticket = ticketOffice?.getTicket()
+            audience.bag?.setTicket(ticket: ticket!)
+        }else {
+            let ticket = ticketOffice?.getTicket()
+            audience.bag?.minusAmount(amount: ticket!.fee)
+            ticketOffice?.plusAmount(amount: ticket!.fee)
+            audience.bag?.setTicket(ticket: ticket!)
+        }
+    }
 }
 
 // 소극장
 class Theater {
     var ticketSeller: TicketSeller?
     
+    // Theater가 Bag과 TicketSeller에 관해 속속들이 알고 있을 필요는 없다
+    // 관람객이 소극장에 입장하는 것이 Theater가 바라는 일!
+    // Theater의 enter 메소드는 TicketSeller의 sellTo 메소드를 호출하기만 할 뿐, TicketOffice의 정체는 알지 못한다
     func enter(audience: Audience) {
-        if (audience.bag?.hasInvitation())! {
-            let ticket = ticketSeller?.ticketOffice?.getTicket()
-            audience.bag?.setTicket(ticket: ticket!)
-        }else {
-            let ticket = ticketSeller?.ticketOffice?.getTicket()
-            audience.bag?.minusAmount(amount: ticket!.fee)
-            ticketSeller?.ticketOffice?.plusAmount(amount: ticket!.fee)
-            audience.bag?.setTicket(ticket: ticket!)
-        }
+        ticketSeller?.sellTo(audience: audience)
     }
 }
