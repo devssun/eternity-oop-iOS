@@ -18,19 +18,27 @@ class Theater {
         self.address = address
         self.phoneNumber = phoneNumber
     }
+}
+
+class MovieDatabase {
+    /// 한 개의 영화 정보를 요청합니다
+    func getMovieFromDB() -> Movie? {
+        return nil
+    }
     
     /// 오늘 상영 영화 리스트를 요청합니다
-    func requestTodayMovieLists() -> [Any] {
-        return ["LISTS"]
+    func requestTodayMovieLists() -> [Movie]? {
+        return nil
     }
+}
+
+class Movie {
+    var name: String
+    var openDate: Date
     
-    /// 영화 정보를 생성합니다
-    func createMovie() {
-    }
-    
-    /// 한 개의 영화 정보를 요청합니다
-    func getMovieFromDB() -> Any {
-        return "MOVIE"
+    init(name: String, openDate: Date) {
+        self.name = name
+        self.openDate = openDate
     }
 }
 
