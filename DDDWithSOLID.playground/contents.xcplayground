@@ -9,5 +9,6 @@
         <page name='DIP - Before'/>
         <page name='DIP - After'/>
         <page name='ISP - Before'/>
+        <page name='ISP - After'/>
     </pages>
 </playground>
