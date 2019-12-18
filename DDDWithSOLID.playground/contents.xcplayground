@@ -8,5 +8,6 @@
         <page name='LSP - After'/>
         <page name='DIP - Before'/>
         <page name='DIP - After'/>
+        <page name='ISP - Before'/>
     </pages>
 </playground>
