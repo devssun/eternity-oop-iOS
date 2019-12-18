@@ -7,5 +7,6 @@
         <page name='LSP - Before'/>
         <page name='LSP - After'/>
         <page name='DIP - Before'/>
+        <page name='DIP - After'/>
     </pages>
 </playground>
